@@ -18,17 +18,35 @@
 <style>
   html, body { margin: 0; height: 100%; background: #fff; overflow: hidden; }
   iframe { position: fixed; inset: 0; width: 100%; height: 100%; border: 0; }
+  #ios { box-sizing: border-box; height: 100%; overflow-y: auto; padding: 48px 24px; text-align: center; color: #1f2430;
+    font: 16px/1.7 -apple-system, "Apple SD Gothic Neo", sans-serif; }
+  #ios[hidden] { display: none; }
+  #ios img { width: 160px; height: 160px; border-radius: 36px; box-shadow: 0 4px 16px rgba(0,0,0,.12); }
+  #ios h1 { font-size: 24px; margin: 20px 0 8px; }
+  #ios p { color: #4b5563; margin: 0 0 28px; }
+  #ios .go { display: inline-block; border: 1px solid #c9d8f0; color: #1d5fb8; background: #e8f0fb; border-radius: 10px; padding: 12px 22px; text-decoration: none; font-weight: 700; }
 </style>
 </head>
 <body>
+<div id="ios" hidden>
+  <img src="icon-512.png" alt="">
+  <h1>봄날 CRM</h1>
+  <p>아래 <b>공유 단추</b>(네모에 위 화살표)를 누르고<br><b>「홈 화면에 추가」</b>를 고르세요.<br>홈 화면의 봄날 아이콘으로 열면 바로 웹판이 열립니다.</p>
+  <a class="go" id="go">웹판 바로 열기</a>
+</div>
 <script>
   // 아이폰 · 아이패드 · 맥 사파리는 다른 주소 안에 띄운 구글 화면의 로그인을 막는다(10/19 사장님 아이폰 — 401).
   // 그래서 거기선 안에 띄우지 않고 웹판 주소로 바로 넘어간다(홈 화면 아이콘은 이 페이지 것 그대로, 구글 경고 문구는 남는다)
   var APP = 'https://script.google.com/macros/s/AKfycbybVoeYF5C2U_va652FKKE3DTezn3k49FUmFSLOxvWFz3gO01ayQIa41fwSizpTVpFpZA/exec';
+  document.getElementById('go').href = APP;
   var ua = navigator.userAgent;
   var apple = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1) ||
     (/Safari/.test(ua) && !/Chrome|Chromium|CriOS|Edg|OPR|Firefox/.test(ua));
-  if (apple) location.replace(APP);
+  // 사파리로 처음 열면 바로 넘어가지 않고 「홈 화면에 추가」 안내 — 바로 넘어가면 구글 주소가 홈 화면에 저장돼 아이콘이 「봄」 글자가 됐다(10/19).
+  // 홈 화면 아이콘으로 열었을 때(navigator.standalone)와 맥은 바로 웹판으로
+  var phone = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  if (apple && (navigator.standalone || !phone)) location.replace(APP);
+  else if (apple) document.getElementById('ios').hidden = false;
   else {
     var f = document.createElement('iframe');
     f.src = APP;
