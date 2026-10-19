@@ -21,7 +21,21 @@
 </style>
 </head>
 <body>
-<iframe src="https://script.google.com/macros/s/AKfycbybVoeYF5C2U_va652FKKE3DTezn3k49FUmFSLOxvWFz3gO01ayQIa41fwSizpTVpFpZA/exec"
-  title="봄날 CRM" allow="clipboard-read; clipboard-write; camera; microphone; geolocation; fullscreen"></iframe>
+<script>
+  // 아이폰 · 아이패드 · 맥 사파리는 다른 주소 안에 띄운 구글 화면의 로그인을 막는다(10/19 사장님 아이폰 — 401).
+  // 그래서 거기선 안에 띄우지 않고 웹판 주소로 바로 넘어간다(홈 화면 아이콘은 이 페이지 것 그대로, 구글 경고 문구는 남는다)
+  var APP = 'https://script.google.com/macros/s/AKfycbybVoeYF5C2U_va652FKKE3DTezn3k49FUmFSLOxvWFz3gO01ayQIa41fwSizpTVpFpZA/exec';
+  var ua = navigator.userAgent;
+  var apple = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1) ||
+    (/Safari/.test(ua) && !/Chrome|Chromium|CriOS|Edg|OPR|Firefox/.test(ua));
+  if (apple) location.replace(APP);
+  else {
+    var f = document.createElement('iframe');
+    f.src = APP;
+    f.title = '봄날 CRM';
+    f.allow = 'clipboard-read; clipboard-write; camera; microphone; geolocation; fullscreen';
+    document.body.appendChild(f);
+  }
+</script>
 </body>
 </html>
