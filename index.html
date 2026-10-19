@@ -47,10 +47,13 @@
   var ios = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
   var phone = ios || /Android|Mobile/.test(ua);
   var safari = /Safari/.test(ua) && !/Chrome|Chromium|CriOS|Edg|OPR|Firefox/.test(ua);
-  var home = navigator.standalone || (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches);
+  // 홈 화면에서 열었나 — 앱 모드(standalone)로 안 잡히는 바로가기가 있다(10/19 아버지 갤럭시 — 아이콘을 눌러도 안내 화면이 다시 떴다).
+  // 그래서 안내 화면을 보일 때 주소를 ?home=1 로 바꿔 둔다 → 홈 화면에 그 주소가 저장되고, 그 주소로 열리면 바로 웹판으로
+  var home = /[?&]home=1/.test(location.search) || navigator.standalone || (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches);
   if (phone && !home) {
     document.getElementById('mob').hidden = false;
     document.getElementById(ios ? 'hintIos' : 'hintAnd').hidden = false;
+    try { history.replaceState(null, '', location.pathname + '?home=1'); } catch (e) { }
   } else if (phone || safari) location.replace(APP);
   else {
     var f = document.createElement('iframe');
